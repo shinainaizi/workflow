@@ -1,0 +1,35 @@
+# 社区活动台账工作流配置
+# 百度千帆API配置
+demo_mode: true  # 演示模式（无需API Key，使用规则引擎）
+
+qianfan:
+  # 在 https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application 获取
+  # 演示模式下无需填写，生产环境必须填写
+  api_key: "your-api-key-here"
+  secret_key: "your-secret-key-here"
+
+  # 模型选择
+  # ERNIE-Speed: 免费但纯文本，不支持图片理解
+  # ERNIE-4.0-Turbo-VL: 支持图片理解（付费）
+  text_model: "ERNIE-Speed"
+  vision_model: "ERNIE-4.0-Turbo-VL"
+
+  # 是否自动理解照片（需要多模态模型支持）
+  enable_photo_understanding: false
+
+# 社区信息（可选，默认填写）
+community:
+  name: "申沁社区"
+  venue: "申沁社区大运河幸福家园"
+  default_target: "社区居民"
+
+# 输出配置
+output:
+  # 台账输出目录
+  ledger_dir: "outputs/ledger"
+  # 汇总报告输出目录
+  report_dir: "outputs/report"
+  # 台账模板文件（留空则使用默认模板）
+  ledger_template: ""
+  # 报告模板文件（留空则使用默认模板）
+  report_template: ""

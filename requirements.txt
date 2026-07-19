@@ -1,0 +1,6 @@
+# 社区活动台账自动化工作流依赖
+python-docx>=0.8.11
+Pillow>=9.0.0
+pyyaml>=6.0
+qianfan>=0.4.0
+requests>=2.28.0
