@@ -20,6 +20,17 @@ import sys
 import yaml
 from pathlib import Path
 
+def safe_print(msg):
+    """Safe print that handles encoding issues on Windows"""
+    try:
+        print(msg)
+    except UnicodeEncodeError:
+        safe_msg = msg.encode('ascii', 'ignore').decode('ascii')
+        if safe_msg.strip():
+            print(safe_msg)
+        else:
+            print("[Non-ASCII content]")
+
 # 将core目录加入Python路径
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'core'))
 
@@ -37,33 +48,33 @@ def load_config():
 
 def process_single_activity(scheme_path, photos_dir, notes_path, config):
     """处理单个活动"""
-    print("=" * 60)
-    print("开始处理活动台账自动生成...")
-    print("=" * 60)
+    safe_print("=" * 60)
+    safe_print("开始处理活动台账自动生成...")
+    safe_print("=" * 60)
     
     # Step 1: 提取结构化信息
-    print("\n[1/4] 正在从策划方案中提取信息...")
+    safe_print("\n[1/4] 正在从策划方案中提取信息...")
     extractor = ActivityExtractor(config)
     activity_data = extractor.extract(scheme_path, photos_dir, notes_path)
-    print(f"  ✓ 提取完成: {activity_data.get('activity_theme', '未知活动')}")
+    safe_print(f"  提取完成: {activity_data.get('activity_theme', '未知活动')}")
     
     # Step 2: 生成台账
-    print("\n[2/4] 正在生成活动台账...")
+    safe_print("\n[2/4] 正在生成活动台账...")
     ledger_gen = LedgerGenerator(config)
     ledger_path = ledger_gen.generate(activity_data)
-    print(f"  ✓ 台账已生成: {ledger_path}")
+    safe_print(f"  台账已生成: {ledger_path}")
     
     # Step 3: 生成汇总报告（如果有多个台账）
-    print("\n[3/4] 正在更新汇总报告...")
+    safe_print("\n[3/4] 正在更新汇总报告...")
     report_gen = ReportGenerator(config)
     report_path = report_gen.update_report(activity_data, ledger_path)
-    print(f"  ✓ 报告已更新: {report_path}")
+    safe_print(f"  报告已更新: {report_path}")
     
-    print("\n" + "=" * 60)
-    print("处理完成！")
-    print(f"台账文件: {ledger_path}")
-    print(f"报告文件: {report_path}")
-    print("=" * 60)
+    safe_print("\n" + "=" * 60)
+    safe_print("处理完成！")
+    safe_print(f"台账文件: {ledger_path}")
+    safe_print(f"报告文件: {report_path}")
+    safe_print("=" * 60)
     
     return ledger_path, report_path
 
@@ -81,7 +92,7 @@ def batch_process(batch_dir, config):
                 photos_dir = subdir / 'photos' if (subdir / 'photos').exists() else None
                 notes_path = subdir / 'notes.txt' if (subdir / 'notes.txt').exists() else None
                 
-                print(f"\n正在处理: {subdir.name}")
+safe_print(f"\n正在处理: {subdir.name}")
                 try:
                     ledger_path, report_path = process_single_activity(
                         str(scheme_path), 
@@ -91,7 +102,7 @@ def batch_process(batch_dir, config):
                     )
                     results.append((subdir.name, ledger_path, report_path))
                 except Exception as e:
-                    print(f"  ✗ 处理失败: {e}")
+                    safe_print(f"  处理失败: {e}")
                     results.append((subdir.name, None, str(e)))
     
     return results
@@ -123,32 +134,33 @@ def main():
     
     # 检查API配置
     if not config.get('qianfan', {}).get('api_key') or config['qianfan']['api_key'] == 'your-api-key-here':
-        print("错误: 请先配置百度千帆API密钥！")
-        print("请编辑 config.yaml 文件，填入你的 API Key 和 Secret Key")
-        print("获取地址: https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application")
+        safe_print("错误: 请先配置百度千帆API密钥！")
+        safe_print("请编辑 config.yaml 文件，填入你的 API Key 和 Secret Key")
+        safe_print("获取地址: https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application")
         sys.exit(1)
     
     try:
         if args.batch:
             # 批量模式
             results = batch_process(args.batch, config)
-            print("\n" + "=" * 60)
-            print("批量处理完成，结果汇总:")
+            safe_print("\n" + "=" * 60)
+            safe_print("批量处理完成，结果汇总:")
             for name, ledger, report in results:
-                status = "✓ 成功" if ledger else f"✗ 失败: {report}"
-                print(f"  {name}: {status}")
+                status = "成功" if ledger else f"失败: {report}"
+                safe_print(f"  {name}: {status}")
         elif args.scheme:
             # 单文件模式
             process_single_activity(args.scheme, args.photos, args.notes, config)
         else:
-            print("请提供 --scheme 参数指定策划方案，或使用 --batch 批量处理")
+            safe_print("请提供 --scheme 参数指定策划方案，或使用 --batch 批量处理")
             parser.print_help()
             
     except Exception as e:
-        print(f"\n错误: {e}")
+        safe_print(f"\n错误: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
+
 
 if __name__ == '__main__':
     main()
