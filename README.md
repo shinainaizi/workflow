@@ -75,7 +75,7 @@ python run.py --scheme "活动方案.docx" --photos "照片文件夹" --notes "�
 ## 项目结构
 
 ```
-community-event-workflow/
+workflow/
 ├── README.md                  # 项目说明
 ├── requirements.txt           # Python依赖
 ├── config.yaml               # 配置文件（API Key、模型选择）
@@ -87,15 +87,10 @@ community-event-workflow/
 │   ├── generate_ledger.py   # 台账生成（Word表格）
 │   └── generate_report.py   # 报告生成（汇总分析）
 ├── examples/                 # 示例数据
-│   ├── input/
-│   │   ├── scheme.docx      # 活动策划方案样本
-│   │   ├── photos/          # 现场照片（4张）
-│   │   └── notes/           # 回忆记录样本
-│   └── output/              # 参考输出
-│       ├── reference_ledger.docx
-│       └── reference_report.docx
-├── templates/                # 自定义Word模板（可选）
-└── outputs/                  # 运行产出（自动生成）
+│   ├── scheme.docx           # 活动策划方案样本
+│   ├── 回忆记录.txt            # 回忆记录样本
+│   └── reference_ledger.docx # 参考台账输出
+└── outputs/                  # 运行产出（自动生成，.gitignore已排除）
     ├── ledger/              # 活动台账
     └── report/              # 汇总报告
 ```

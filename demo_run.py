@@ -635,8 +635,8 @@ def main():
     log_lines.append("=" * 60)
 
     # 文件路径
-    scheme_path = 'examples/input/scheme.docx'
-    notes_path = 'examples/input/notes/回忆记录.txt'
+    scheme_path = 'examples/scheme.docx'
+    notes_path = 'examples/回忆记录.txt'
 
     # 检查文件是否存在
     if not os.path.exists(scheme_path):

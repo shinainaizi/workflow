@@ -91,8 +91,8 @@ def batch_process(batch_dir, config):
                 scheme_path = scheme_files[0]  # 取第一个docx作为方案
                 photos_dir = subdir / 'photos' if (subdir / 'photos').exists() else None
                 notes_path = subdir / 'notes.txt' if (subdir / 'notes.txt').exists() else None
-                
-safe_print(f"\n正在处理: {subdir.name}")
+
+                safe_print(f"\n正在处理: {subdir.name}")
                 try:
                     ledger_path, report_path = process_single_activity(
                         str(scheme_path), 
